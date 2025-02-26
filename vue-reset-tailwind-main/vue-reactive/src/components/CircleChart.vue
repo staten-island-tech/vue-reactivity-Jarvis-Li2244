@@ -1,7 +1,7 @@
 <template>
   <div class="circle bg-sky-100 rounded-[50%] w-[40vw] h-[40vw] m-6 flex justify-evenly items-center flex-wrap shadow-xl">
       <button @click=colorChange(sectCirc) class="spin-button hover:cursor-pointer bg-linear-65 from-purple-700 via-pink-400 to-orange-300 border-18 border-sky-100 rounded-[50%] w-[14vw] h-[14vw] absolute">
-        <img class="spinner object-fill" src="../images/spinning.png" alt="CircleCenter">
+        <img class="spinner object-fill" src="../../public/images/spinning.png" alt="CircleCenter">
       </button>
       <CircleSection
         v-for="sect in sectCirc" 
