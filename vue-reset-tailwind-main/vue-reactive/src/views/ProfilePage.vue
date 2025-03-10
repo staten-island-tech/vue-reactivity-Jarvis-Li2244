@@ -62,12 +62,9 @@
 
                 <div class="w-1/2 h-9/10 flex justify-center items-center">
                     <ProfileCard 
-                        v-for="card in profileCard" 
-                        :label=profileCard[0].label
-                        :info=profileCard[0].info
-                        :link=profileCard[0].link
-                        :image=profileCard[0].image
-                        :title=profileCard[0].title />
+                        :key="profileCard[0].label"
+                        :card="profileCard[0]"
+                        />
                 </div>
 
                 <div class="w-full h-1/10 flex justify-center items-center">
@@ -85,12 +82,22 @@ import ProfileCard from '../components/ProfileCard.vue';
 import { ref } from 'vue';
 import { cardList, profileKey, profileCard } from "../components/manyLists.js";
 
+
 for (let i = 0; i < cardList.length; i++) {
     if (cardList[i].label == profileKey.value) {
         profileCard.value = [cardList[i]];
-        profileKey.value = []
+        if (localStorage.getItem("profile")) {
+            localStorage.removeItem("profile")
+        }
+        localStorage.setItem("profile", JSON.stringify(profileCard.value))
     }
 }
+
+if (JSON.parse(localStorage.getItem("profile"))) {
+    profileCard.value = JSON.parse(localStorage.getItem("profile"))
+}
+// important stuff above, do not change really
+// below is up for updating
 
 const Status1 = ref("")
 const Status2 = ref("")
@@ -114,14 +121,14 @@ function updateAge() {
         localStorage.removeItem("age")
     }
     localStorage.setItem("age", age.value)
-}  
+}     
 
 function updateGender() {
     if (localStorage.getItem("gender")) {
         localStorage.removeItem("gender")
-    }
+        }
     localStorage.setItem("gender", gender.value)
-}  
+}
 
 function updateOccupation() {
     if (localStorage.getItem("occupation")) {
@@ -135,7 +142,7 @@ function updateActivity() {
         localStorage.removeItem("activity")
     }
     localStorage.setItem("activity", activity.value)
-}  
+}
 
 function loadVariables() {
     if (localStorage.getItem("name")) {
@@ -152,7 +159,7 @@ function loadVariables() {
     }
     if (localStorage.getItem("activity")) {
         activity.value= localStorage.getItem("activity");
-    }
+        }
 }
 
 loadVariables();
@@ -222,6 +229,10 @@ function saveProfile(number) {
 }
 
 function clearProfile() {
+    // remember this line
+    if (JSON.parse(localStorage.getItem("profile"))) {
+        localStorage.removeItem("profile")
+    }
     profileCard.value = [{ 
         title: '', 
         label: "", 
