@@ -45,19 +45,19 @@
 
                 <div class="w-1/2 h-9/10 flex flex-col items-left justify-center p-4 text-emerald-600 font-semibold">
                     <h1 class="text-[1.5vw] underline">Name:</h1>
-                    <input @input=updateName() class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model="name" placeholder="Your Name...">
+                    <input class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.name placeholder="Your Name...">
 
                     <h1 class="text-[1.5vw] underline">Age:</h1>
-                    <input @input=updateAge() class="bg-sky-100 w-2/5 h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="number" v-model="age" placeholder="Your Age..." min="0" max="125" onkeydown="return false">
+                    <input class="bg-sky-100 w-2/5 h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="number" v-model=profile.age placeholder="Your Age..." min="0" max="125" onkeydown="return false">
 
                     <h1 class="text-[1.5vw] underline">Gender:</h1>
-                    <input @input=updateGender() class="bg-sky-100 w-2/3 h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model="gender" placeholder="Your Gender...">
+                    <input class="bg-sky-100 w-2/3 h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.gender placeholder="Your Gender...">
 
                     <h1 class="text-[1.5vw] underline">Occupation:</h1>
-                    <input @input=updateOccupation() class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model="occupation" placeholder="Your Occupation...">
+                    <input class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.occupation placeholder="Your Occupation...">
 
                     <h1 class="text-[1.5vw] underline">Favorite Activity:</h1>
-                    <input @input=updateActivity() class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model="activity" placeholder="Your Favorite Activity...">
+                    <input class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.activity placeholder="Your Favorite Activity...">
                 </div>
 
                 <div class="w-1/2 h-9/10 flex justify-center items-center">
@@ -79,7 +79,7 @@
 
 <script setup>
 import ProfileCard from '../components/ProfileCard.vue';
-import { ref } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { cardList, profileKey, profileCard } from "../components/manyLists.js";
 
 
@@ -103,69 +103,73 @@ const Status1 = ref("")
 const Status2 = ref("")
 const Status3 = ref("")
 
-const name = ref('');
-const age = ref(0);
-const gender = ref('');
-const occupation = ref('');
-const activity = ref('');
+const profile = reactive({
+    name: '',
+    age: 0,
+    gender: '',
+    occupation: '',
+    activity: ''
+});
 
-function updateName() {
-    if (localStorage.getItem("name")) {
-        localStorage.removeItem("name")
-    }
-    localStorage.setItem("name", name.value)
-}  
+const inputs = [
+  {label: 'Name:', value: profile.name, type: 'text', placeholder: 'Your Name...' },
+  {label: 'Age:', value: profile.age, type: 'number', placeholder: 'Your Age...' },
+  {label: 'Gender:', value: profile.gender, type: 'text', placeholder: 'Your Gender...' },
+  {label: 'Occupation:', value: profile.occupation, type: 'text', placeholder: 'Your Occupation...' },
+  {label: 'Favorite Activity:', value: profile.activity, type: 'text', placeholder: 'Your Favorite Activity...' }
+]
 
-function updateAge() {
-    if (localStorage.getItem("age")) {
-        localStorage.removeItem("age")
-    }
-    localStorage.setItem("age", age.value)
+function clearProfile() {
+    profileCard.value = [{ 
+        title: '', 
+        label: "", 
+        image: '', 
+        type: "", 
+        info: "",
+        link: ""
+    }];
+
+    profile.name = '';
+    profile.age = 0;
+    profile.gender = '';
+    profile.occupation = '';
+    profile.activity = '';
+
+    Object.keys(profile)
+    .forEach(key => {
+        if (localStorage.getItem(key)) {
+            localStorage.removeItem(key)
+        }
+    });
 }     
 
-function updateGender() {
-    if (localStorage.getItem("gender")) {
-        localStorage.removeItem("gender")
+function updateProfile() {
+    console.log(profile.name)
+    Object.keys(profile)
+    .forEach(key => {
+        if (localStorage.getItem(key)) {
+            localStorage.removeItem(key)
         }
-    localStorage.setItem("gender", gender.value)
+        localStorage.setItem(key, profile[key]);
+        console.log(key, profile[key])
+    });
 }
 
-function updateOccupation() {
-    if (localStorage.getItem("occupation")) {
-        localStorage.removeItem("occupation")
-    }
-    localStorage.setItem("occupation", occupation.value)
-}  
-
-function updateActivity() {
-    if (localStorage.getItem("activity")) {
-        localStorage.removeItem("activity")
-    }
-    localStorage.setItem("activity", activity.value)
-}
-
-function loadVariables() {
-    if (localStorage.getItem("name")) {
-        name.value = localStorage.getItem("name");
-    }
-    if (localStorage.getItem("age")) {
-        age.value = localStorage.getItem("age");
-    }
-    if (localStorage.getItem("gender")) {
-        gender.value = localStorage.getItem("gender");
-    }
-    if (localStorage.getItem("occupation")) {
-        occupation.value = localStorage.getItem("occupation");
-    }
-    if (localStorage.getItem("activity")) {
-        activity.value= localStorage.getItem("activity");
-        }
-}
-
-loadVariables();
-
-function loadStatus(number) {
+function loadSlot(number) {
+    const savedProfile = JSON.parse(localStorage.getItem(`userProfile${number}`));
     const savedStatus = localStorage.getItem(`userStatus${number}`);
+    
+    if (savedProfile) {
+        profileCard.value = savedProfile.profCard || [{ title: '', label: "", image: '', type: "", info: "", link: ""}];
+        profile.name = savedProfile.name || '';
+        profile.age = savedProfile.age || 0;
+        profile.gender = savedProfile.gender || '';
+        profile.occupation = savedProfile.occupation || '';
+        profile.activity = savedProfile.activity || '';;
+    } else {
+        clearProfile();
+    }
+
     if (savedStatus) {
         if (number == 1) {
             Status1.value = savedStatus;
@@ -174,22 +178,25 @@ function loadStatus(number) {
         } else if (number == 3) {
             Status3.value = savedStatus;
         }
-    } else {
-        if (number == 1) {
-            Status1.value = "Empty Profile Card"
-        } else if (number == 2) {
-            Status2.value = "Empty Profile Card"
-        } else if (number == 3) {
-            Status3.value = "Empty Profile Card"
-        }
-    }
+    } else (
+        loadStatus(number)
+    )
+
+    updateProfile();
 }
 
-loadStatus(1);
-loadStatus(2);
-loadStatus(3);
+function clearSlot(number) {
+    if (localStorage.getItem(`userProfile${number}`)) {
+        localStorage.removeItem(`userProfile${number}`);
+    }
+    if (localStorage.getItem(`userStatus${number}`)) {
+        localStorage.removeItem(`userStatus${number}`);
+    }
+    loadStatus(number)
+}
 
-function saveProfile(number) {
+
+function saveSlot(number) {
     if (localStorage.getItem(`userProfile${number}`)) {
         localStorage.removeItem(`userProfile${number}`);
     }
@@ -228,56 +235,17 @@ function saveProfile(number) {
     localStorage.setItem(`userStatus${number}`, Status);
 }
 
-function clearProfile() {
-    // remember this line
-    if (JSON.parse(localStorage.getItem("profile"))) {
-        localStorage.removeItem("profile")
-    }
-    profileCard.value = [{ 
-        title: '', 
-        label: "", 
-        image: '', 
-        type: "", 
-        info: "",
-        link: ""
-    }];
-    name.value = '';
-    age.value = 0;
-    gender.value = '';
-    occupation.value = '';
-    activity.value = '';
-
-    if (localStorage.getItem("name")) {
-        localStorage.removeItem("name");
-    }
-    if (localStorage.getItem("age")) {
-        localStorage.removeItem("age");
-    }
-    if (localStorage.getItem("gender")) {
-        localStorage.removeItem("gender");
-    }
-    if (localStorage.getItem("occupation")) {
-        localStorage.removeItem("occupation");
-    }
-    if (localStorage.getItem("activity")) {
-        localStorage.removeItem("activity");
-    }
+function loadVariables() {
+    Object.keys(profile)
+    .forEach(key => {
+        if (localStorage.getItem(key)) {
+            profile[key] = localStorage.getItem(key);
+        }
+    });
 }
 
-function loadProfile(number) {
-    const savedProfile = JSON.parse(localStorage.getItem(`userProfile${number}`));
+function loadStatus(number) {
     const savedStatus = localStorage.getItem(`userStatus${number}`);
-    if (savedProfile) {
-        profileCard.value = savedProfile.profCard || [{ title: '', label: "", image: '', type: "", info: "", link: ""}];
-        name.value = savedProfile.name || '';
-        age.value = savedProfile.age || 0;
-        gender.value = savedProfile.gender || '';
-        occupation.value = savedProfile.occupation || '';
-        activity.value = savedProfile.activity || '';;
-    } else {
-        clearProfile();
-    }
-
     if (savedStatus) {
         if (number == 1) {
             Status1.value = savedStatus;
@@ -286,26 +254,27 @@ function loadProfile(number) {
         } else if (number == 3) {
             Status3.value = savedStatus;
         }
-    } else (
-        loadStatus(number)
-    )
-
-    updateName();
-    updateAge();
-    updateGender();
-    updateOccupation();
-    updateActivity();
+    } else {
+        if (number == 1) {
+            Status1.value = "Empty Profile Card"
+        } else if (number == 2) {
+            Status2.value = "Empty Profile Card"
+        } else if (number == 3) {
+            Status3.value = "Empty Profile Card"
+        }
+    }
 }
 
-function clearSlot(number) {
-    if (localStorage.getItem(`userProfile${number}`)) {
-        localStorage.removeItem(`userProfile${number}`);
-    }
-    if (localStorage.getItem(`userStatus${number}`)) {
-        localStorage.removeItem(`userStatus${number}`);
-    }
-    loadStatus(number)
-}
+loadVariables();
+
+loadStatus(1);
+loadStatus(2);
+loadStatus(3);
+
+
+watch(() => profile, updateProfile, { deep: true });
+
+    
 </script>
 
 <style lang="css" scoped>
