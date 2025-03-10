@@ -1,13 +1,11 @@
 <template>
-    <RouterLink :to="'/' + name" :class= color,orientation class="circleSection w-1/2 h-1/2 border-sky-100"/>
+    <RouterLink :to="'/' + sect.name" :class= sect.color,sect.orientation class="circleSection w-1/2 h-1/2 border-sky-100"/>
 </template>
 
 <script setup>
 
 defineProps({
-    color: String,
-    orientation: String,
-    name: String
+    sect: Object
 })
 
 </script>

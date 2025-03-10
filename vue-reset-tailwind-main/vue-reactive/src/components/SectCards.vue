@@ -4,11 +4,8 @@
         <PersonalityCard 
             v-for="card in cards" 
             :key="card.title" 
-            :title="card.title"
-            :label="card.label"
-            :image="card.image"
-            :info="card.info"
-            :link="card.link"/>
+            :card="card"
+        />
     </div>
 </template>
 

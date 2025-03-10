@@ -155,6 +155,7 @@ export const cardList = [
 ];
   
 export const profileKey = ref([])
+
 export const profileCard = ref([{ 
   title: '', 
   label: "", 
@@ -163,3 +164,4 @@ export const profileCard = ref([{
   info: "",
   link: ""
 }])
+

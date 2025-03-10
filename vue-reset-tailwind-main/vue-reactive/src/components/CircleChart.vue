@@ -6,9 +6,7 @@
       <CircleSection
         v-for="sect in sectCirc" 
         :key="sect.name" 
-        :color="sect.color" 
-        :orientation="sect.orientation"
-        :name="sect.name"
+        :sect="sect"
       />
   </div>
 </template>
