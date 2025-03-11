@@ -12,7 +12,6 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
 import CircleSection from './CircleSection.vue';
 import { sectCirc } from './manyLists.js';
 
