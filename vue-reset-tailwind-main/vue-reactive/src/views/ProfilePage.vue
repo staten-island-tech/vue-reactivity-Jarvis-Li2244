@@ -266,8 +266,6 @@ loadStatus(3);
 
 watch(() => profile, updateProfile, { deep: true });
 
-
-
 </script>
 
 <style lang="css" scoped>
