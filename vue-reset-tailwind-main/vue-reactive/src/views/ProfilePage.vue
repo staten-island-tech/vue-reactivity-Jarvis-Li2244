@@ -44,20 +44,12 @@
             <div class="card w-9/10 h-5/6 flex flex-wrap items-center rounded-xl p-2 font-serif">
 
                 <div class="w-1/2 h-9/10 flex flex-col items-left justify-center p-4 text-emerald-600 font-semibold">
-                    <h1 class="text-[1.5vw] underline">Name:</h1>
-                    <input class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.name placeholder="Your Name...">
-
-                    <h1 class="text-[1.5vw] underline">Age:</h1>
-                    <input class="bg-sky-100 w-2/5 h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="number" v-model=profile.age placeholder="Your Age..." min="0" max="125" onkeydown="return false">
-
-                    <h1 class="text-[1.5vw] underline">Gender:</h1>
-                    <input class="bg-sky-100 w-2/3 h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.gender placeholder="Your Gender...">
-
-                    <h1 class="text-[1.5vw] underline">Occupation:</h1>
-                    <input class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.occupation placeholder="Your Occupation...">
-
-                    <h1 class="text-[1.5vw] underline">Favorite Activity:</h1>
-                    <input class="bg-sky-100 w-full h-1/10 text-emerald-600 p-2 rounded-lg m-2 font-normal text-[1vw] placeholder:text-[1vw]" type="text" v-model=profile.activity placeholder="Your Favorite Activity...">
+                    <InputBox 
+                        v-for="(item, index) in inputs" 
+                        :key="item.label" 
+                        v-model="profile[Object.keys(profile)[index]]" 
+                        :item="item"
+                    />
                 </div>
 
                 <div class="w-1/2 h-9/10 flex justify-center items-center">
@@ -79,6 +71,7 @@
 
 <script setup>
 import ProfileCard from '../components/ProfileCard.vue';
+import InputBox from '../components/InputBox.vue';
 import { ref, reactive, watch } from 'vue';
 import { cardList, profileKey, profileCard } from "../components/manyLists.js";
 
@@ -105,21 +98,26 @@ const Status3 = ref("")
 
 const profile = reactive({
     name: '',
-    age: 0,
+    age: '',
     gender: '',
     occupation: '',
     activity: ''
 });
 
-const inputs = [
-  {label: 'Name:', value: profile.name, type: 'text', placeholder: 'Your Name...' },
-  {label: 'Age:', value: profile.age, type: 'number', placeholder: 'Your Age...' },
-  {label: 'Gender:', value: profile.gender, type: 'text', placeholder: 'Your Gender...' },
-  {label: 'Occupation:', value: profile.occupation, type: 'text', placeholder: 'Your Occupation...' },
-  {label: 'Favorite Activity:', value: profile.activity, type: 'text', placeholder: 'Your Favorite Activity...' }
-]
+const inputs = ref([
+  {label: 'Name:', type: 'text', placeholder: 'Your Name...' },
+  {label: 'Age:', type: 'number', placeholder: 'Your Age...' },
+  {label: 'Gender:', type: 'text', placeholder: 'Your Gender...' },
+  {label: 'Occupation:', type: 'text', placeholder: 'Your Occupation...' },
+  {label: 'Favorite Activity:', type: 'text', placeholder: 'Your Favorite Activity...' }
+])
 
 function clearProfile() {
+
+    if (localStorage.getItem("profile")) {
+        localStorage.removeItem("profile")
+    }
+
     profileCard.value = [{ 
         title: '', 
         label: "", 
@@ -129,14 +127,9 @@ function clearProfile() {
         link: ""
     }];
 
-    profile.name = '';
-    profile.age = 0;
-    profile.gender = '';
-    profile.occupation = '';
-    profile.activity = '';
-
     Object.keys(profile)
     .forEach(key => {
+        profile[key] = '';
         if (localStorage.getItem(key)) {
             localStorage.removeItem(key)
         }
@@ -144,15 +137,15 @@ function clearProfile() {
 }     
 
 function updateProfile() {
-    console.log(profile.name)
+
     Object.keys(profile)
     .forEach(key => {
         if (localStorage.getItem(key)) {
             localStorage.removeItem(key)
         }
         localStorage.setItem(key, profile[key]);
-        console.log(key, profile[key])
     });
+
 }
 
 function loadSlot(number) {
@@ -162,7 +155,7 @@ function loadSlot(number) {
     if (savedProfile) {
         profileCard.value = savedProfile.profCard || [{ title: '', label: "", image: '', type: "", info: "", link: ""}];
         profile.name = savedProfile.name || '';
-        profile.age = savedProfile.age || 0;
+        profile.age = savedProfile.age || '';
         profile.gender = savedProfile.gender || '';
         profile.occupation = savedProfile.occupation || '';
         profile.activity = savedProfile.activity || '';;
@@ -271,10 +264,10 @@ loadStatus(1);
 loadStatus(2);
 loadStatus(3);
 
-
 watch(() => profile, updateProfile, { deep: true });
 
-    
+
+
 </script>
 
 <style lang="css" scoped>
