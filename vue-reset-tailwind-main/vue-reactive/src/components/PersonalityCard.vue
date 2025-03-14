@@ -18,7 +18,7 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { sectCirc, profileKey } from "./manyLists.js"
 
-defineProps({
+const props = defineProps({
     card: Object
 })
 

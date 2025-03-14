@@ -18,7 +18,6 @@ import { cardList } from './manyLists.js';
 const route = useRoute()
 const cards = reactive([]);
 
-
 onMounted(() => {
     const cardType = route.params.name;
     cardList

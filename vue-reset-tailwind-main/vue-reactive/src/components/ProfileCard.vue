@@ -14,7 +14,7 @@
 
 <script setup>
 
-defineProps({
+const props = defineProps({
     card: Object
 })
 

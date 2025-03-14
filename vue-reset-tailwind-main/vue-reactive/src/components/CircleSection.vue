@@ -4,7 +4,7 @@
 
 <script setup>
 
-defineProps({
+const props = defineProps({
     sect: Object
 })
 
